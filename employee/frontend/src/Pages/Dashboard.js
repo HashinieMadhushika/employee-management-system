@@ -26,7 +26,7 @@ const Dashboard = () => {
     email: '',
     position: '',
     department: 'Engineering',
-    status: 'Active'
+    status: 'ACTIVE'
   });
   const [userType, setUserType] = useState('employee');
   const [employees, setEmployees] = useState([
@@ -38,7 +38,7 @@ const Dashboard = () => {
       email: 'john@example.com',
       position: 'Financial Developer',
       department: 'Engineering',
-      status: 'Active',
+      status: 'ACTIVE',
       selected: false
     },
     {
@@ -49,7 +49,7 @@ const Dashboard = () => {
       email: 'jane@example.com',
       position: 'UI/UX Designer',
       department: 'Design',
-      status: 'Active',
+      status: 'ACTIVE',
       selected: false
     },
     {
@@ -60,7 +60,7 @@ const Dashboard = () => {
       email: 'mike@example.com',
       position: 'Business Developer',
       department: 'Engineering',
-      status: 'On-Leave',
+      status: 'ON-LEAVE',
       selected: false
     },
     {
@@ -71,7 +71,7 @@ const Dashboard = () => {
       email: 'sarah@example.com',
       position: 'Product Manager',
       department: 'Product',
-      status: 'Active',
+      status: 'ACTIVE',
       selected: false
     },
     {
@@ -82,11 +82,19 @@ const Dashboard = () => {
       email: 'alex@example.com',
       position: 'QA Engineer',
       department: 'Engineering',
-      status: 'Active',
+      status: 'ACTIVE',
       selected: false
     }
   ]);
   const navigate = useNavigate();
+
+  const isAdmin = userType === 'administrator';
+
+  // Email validation function
+  const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   // Check user role on component mount
   useEffect(() => {
@@ -97,6 +105,37 @@ const Dashboard = () => {
       navigate('/login');
     }
   }, [navigate]);
+
+  // Fetch employees from backend
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const token = localStorage.getItem('authToken');
+        const response = await fetch('/api/employees', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          setEmployees(data.map(emp => ({
+            ...emp,
+            initials: emp.firstName.charAt(0) + emp.lastName.charAt(0),
+            selected: false
+          })));
+        } else {
+          console.error('Failed to fetch employees');
+          // Keep the dummy data as fallback for demo
+        }
+      } catch (error) {
+        console.error('Error fetching employees:', error);
+      }
+    };
+
+    fetchEmployees();
+  }, []);
 
   const filteredEmployees = employees.filter(employee =>
     employee.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -121,7 +160,7 @@ const Dashboard = () => {
     });
   };
 
-  const handleAddEmployee = (e) => {
+  const handleAddEmployee = async (e) => {
     e.preventDefault();
     
     if (!newEmployee.firstName || !newEmployee.lastName || !newEmployee.email || !newEmployee.position || !newEmployee.department) {
@@ -129,34 +168,65 @@ const Dashboard = () => {
       return;
     }
 
-    // Generate initials from name
-    const initials = newEmployee.firstName.charAt(0) + newEmployee.lastName.charAt(0);
+    // Email validation
+    if (!isValidEmail(newEmployee.email)) {
+      alert('Please enter a valid email address');
+      return;
+    }
 
-    // Create new employee object
-    const employee = {
-      id: employees.length + 1,
-      initials: initials.toUpperCase(),
-      firstName: newEmployee.firstName,
-      lastName: newEmployee.lastName,
-      email: newEmployee.email,
-      position: newEmployee.position,
-      department: newEmployee.department,
-      status: 'Active',
-      selected: false
-    };
+    // Check for duplicate email
+    if (employees.some(emp => emp.email.toLowerCase() === newEmployee.email.toLowerCase())) {
+      alert('An employee with this email already exists');
+      return;
+    }
 
-    // Add to employees array
-    setEmployees([employee, ...employees]);
-    
-    // Reset form and close modal
-    setNewEmployee({
-      firstName: '',
-      lastName: '',
-      email: '',
-      position: '',
-      department: 'Engineering'
-    });
-    setShowAddEmployeeModal(false);
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await fetch('/api/employees', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          firstName: newEmployee.firstName,
+          lastName: newEmployee.lastName,
+          email: newEmployee.email,
+          position: newEmployee.position,
+          department: newEmployee.department,
+          status: 'ACTIVE'
+        })
+      });
+
+      if (response.ok) {
+        const employee = await response.json();
+        
+        // Add to local state with initials
+        setEmployees(prev => [{
+          ...employee,
+          initials: employee.firstName.charAt(0) + employee.lastName.charAt(0),
+          selected: false
+        }, ...prev]);
+        
+        // Reset form and close modal
+        setNewEmployee({
+          firstName: '',
+          lastName: '',
+          email: '',
+          position: '',
+          department: 'Engineering'
+        });
+        setShowAddEmployeeModal(false);
+        
+        // Show success message
+        alert('Employee added successfully!');
+      } else {
+        alert('Failed to add employee');
+      }
+    } catch (error) {
+      console.error('Error adding employee:', error);
+      alert('Error adding employee');
+    }
   };
 
   const handleEditEmployee = (employee) => {
@@ -172,7 +242,7 @@ const Dashboard = () => {
     setShowUpdateEmployeeModal(true);
   };
 
-  const handleUpdateEmployee = (e) => {
+  const handleUpdateEmployee = async (e) => {
     e.preventDefault();
     
     if (!updateEmployee.firstName || !updateEmployee.lastName || !updateEmployee.email || !updateEmployee.position || !updateEmployee.department) {
@@ -180,28 +250,50 @@ const Dashboard = () => {
       return;
     }
 
-    // Generate new initials if name changed
-    const initials = updateEmployee.firstName.charAt(0) + updateEmployee.lastName.charAt(0);
+    // Email validation
+    if (!isValidEmail(updateEmployee.email)) {
+      alert('Please enter a valid email address');
+      return;
+    }
 
-    // Update employee in the array
-    const updatedEmployees = employees.map(emp =>
-      emp.id === selectedEmployee.id
-        ? {
-            ...emp,
-            firstName: updateEmployee.firstName,
-            lastName: updateEmployee.lastName,
-            email: updateEmployee.email,
-            position: updateEmployee.position,
-            department: updateEmployee.department,
-            status: updateEmployee.status,
-            initials: initials.toUpperCase()
-          }
-        : emp
-    );
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await fetch(`/api/employees/${selectedEmployee.id}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updateEmployee)
+      });
 
-    setEmployees(updatedEmployees);
-    setShowUpdateEmployeeModal(false);
-    setSelectedEmployee(null);
+      if (response.ok) {
+        const updatedEmp = await response.json();
+        
+        // Update employee in the array
+        const updatedEmployees = employees.map(emp =>
+          emp.id === selectedEmployee.id
+            ? {
+                ...updatedEmp,
+                initials: updatedEmp.firstName.charAt(0) + updatedEmp.lastName.charAt(0),
+                selected: emp.selected
+              }
+            : emp
+        );
+
+        setEmployees(updatedEmployees);
+        setShowUpdateEmployeeModal(false);
+        setSelectedEmployee(null);
+        
+        // Show success message
+        alert('Employee updated successfully!');
+      } else {
+        alert('Failed to update employee');
+      }
+    } catch (error) {
+      console.error('Error updating employee:', error);
+      alert('Error updating employee');
+    }
   };
 
   const handleDeleteClick = (employee) => {
@@ -209,16 +301,36 @@ const Dashboard = () => {
     setShowDeleteConfirmModal(true);
   };
 
-  const handleDeleteEmployee = () => {
-    const updatedEmployees = employees.filter(emp => emp.id !== selectedEmployee.id);
-    setEmployees(updatedEmployees);
-    setShowDeleteConfirmModal(false);
-    setSelectedEmployee(null);
+  const handleDeleteEmployee = async () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await fetch(`/api/employees/${selectedEmployee.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        const updatedEmployees = employees.filter(emp => emp.id !== selectedEmployee.id);
+        setEmployees(updatedEmployees);
+        setShowDeleteConfirmModal(false);
+        setSelectedEmployee(null);
+        
+        // Show success message
+        alert('Employee deleted successfully!');
+      } else {
+        alert('Failed to delete employee');
+      }
+    } catch (error) {
+      console.error('Error deleting employee:', error);
+      alert('Error deleting employee');
+    }
   };
 
   const handleViewEmployee = (employee) => {
     setSelectedEmployee(employee);
-    alert(`Employee Details:\nName: ${employee.firstName} ${employee.lastName}\nEmail: ${employee.email}\nPosition: ${employee.position}\nDepartment: ${employee.department}\nStatus: ${employee.status}`);
+    alert(`Employee Details:\nName: ${employee.firstName} ${employee.lastName}\nEmail: ${employee.email}\nPosition: ${employee.position}\nDepartment: ${employee.department}\nStatus: ${employee.status.replace('-', ' ')}`);
   };
 
   const handleEmployeeSelection = (employeeId) => {
@@ -257,11 +369,34 @@ const Dashboard = () => {
     setShowBulkDeleteModal(true);
   };
 
-  const handleBulkDeleteSubmit = () => {
-    const updatedEmployees = employees.filter(emp => !emp.selected);
-    setEmployees(updatedEmployees);
-    setSelectedEmployees([]);
-    setShowBulkDeleteModal(false);
+  const handleBulkDeleteSubmit = async () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      const deletePromises = selectedEmployees.map(emp =>
+        fetch(`/api/employees/${emp.id}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+      );
+
+      const responses = await Promise.all(deletePromises);
+      const allSuccessful = responses.every(response => response.ok);
+
+      if (allSuccessful) {
+        const updatedEmployees = employees.filter(emp => !emp.selected);
+        setEmployees(updatedEmployees);
+        setSelectedEmployees([]);
+        setShowBulkDeleteModal(false);
+        alert(`${selectedEmployees.length} employee(s) deleted successfully!`);
+      } else {
+        alert('Failed to delete some employees');
+      }
+    } catch (error) {
+      console.error('Error deleting employees:', error);
+      alert('Error deleting employees');
+    }
   };
 
   const handleLogout = () => {
@@ -271,9 +406,6 @@ const Dashboard = () => {
     localStorage.removeItem('userEmail');
     navigate('/login');
   };
-
-  // Check if user is administrator
-  const isAdmin = userType === 'administrator';
 
   return (
     <div className="dashboard-page">
@@ -348,11 +480,11 @@ const Dashboard = () => {
                   <p>Total Employees</p>
                 </div>
                 <div className="stat-card">
-                  <h3>{employees.filter(e => e.status === 'Active').length}</h3>
+                  <h3>{employees.filter(e => e.status === 'ACTIVE').length}</h3>
                   <p>Active</p>
                 </div>
                 <div className="stat-card">
-                  <h3>{employees.filter(e => e.status === 'On-Leave').length}</h3>
+                  <h3>{employees.filter(e => e.status === 'ON-LEAVE').length}</h3>
                   <p>On Leave</p>
                 </div>
                 <div className="stat-card">
@@ -425,8 +557,8 @@ const Dashboard = () => {
                           <span className="department-badge">{employee.department}</span>
                         </td>
                         <td>
-                          <span className={`status-badge ${employee.status.toLowerCase().replace('-', '')}`}>
-                            {employee.status}
+                          <span className={`status-badge ${employee.status.toLowerCase().replace('_', '-')}`}>
+                            {employee.status.replace('-', ' ')}
                           </span>
                         </td>
                         <td>
@@ -444,7 +576,7 @@ const Dashboard = () => {
                               className="icon-btn" 
                               title="View"
                               onClick={() => handleViewEmployee(employee)}
-                            >
+                              >
                               👁️
                             </button>
                             {isAdmin && (
@@ -680,9 +812,9 @@ const Dashboard = () => {
                   value={updateEmployee.status}
                   onChange={handleUpdateInputChange}
                 >
-                  <option value="Active">Active</option>
-                  <option value="On-Leave">On Leave</option>
-                  <option value="Terminated">Terminated</option>
+                  <option value="ACTIVE">ACTIVE</option>
+                  <option value="ON-LEAVE">ON-LEAVE</option>
+                  <option value="TERMINATED">TERMINATED</option>
                 </select>
               </div>
               
