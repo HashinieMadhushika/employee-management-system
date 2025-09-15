@@ -1,9 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const { generalLimiter } = require('./middleware/rateLimit');
 const authRoutes = require('./routes/auth');
-const employeeRoutes = require('./routes/employees');
+//const employeeRoutes = require('./routes/employees');
 
 const app = express();
 
@@ -22,9 +21,9 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-app.use(generalLimiter);
+//app.use(generalLimiter);
 app.use('/api/auth', authRoutes);
-app.use('/api/employees', employeeRoutes);
+//app.use('/api/employees', employeeRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
