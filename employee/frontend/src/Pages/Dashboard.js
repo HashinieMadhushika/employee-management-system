@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect , useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -29,63 +29,10 @@ const Dashboard = () => {
     status: 'ACTIVE'
   });
   const [userType, setUserType] = useState('employee');
-  const [employees, setEmployees] = useState([
-    {
-      id: 1,
-      initials: 'JD',
-      firstName: 'John',
-      lastName: 'Dale',
-      email: 'john@example.com',
-      position: 'Financial Developer',
-      department: 'Engineering',
-      status: 'ACTIVE',
-      selected: false
-    },
-    {
-      id: 2,
-      initials: 'JS',
-      firstName: 'Jane',
-      lastName: 'Smith',
-      email: 'jane@example.com',
-      position: 'UI/UX Designer',
-      department: 'Design',
-      status: 'ACTIVE',
-      selected: false
-    },
-    {
-      id: 3,
-      initials: 'MJ',
-      firstName: 'Mike',
-      lastName: 'Johnson',
-      email: 'mike@example.com',
-      position: 'Business Developer',
-      department: 'Engineering',
-      status: 'ON-LEAVE',
-      selected: false
-    },
-    {
-      id: 4,
-      initials: 'SW',
-      firstName: 'Sarah',
-      lastName: 'Williams',
-      email: 'sarah@example.com',
-      position: 'Product Manager',
-      department: 'Product',
-      status: 'ACTIVE',
-      selected: false
-    },
-    {
-      id: 5,
-      initials: 'AB',
-      firstName: 'Alex',
-      lastName: 'Brown',
-      email: 'alex@example.com',
-      position: 'QA Engineer',
-      department: 'Engineering',
-      status: 'ACTIVE',
-      selected: false
-    }
-  ]);
+  
+  //===================================================
+  const [employees, setEmployees] = useState([]); // Start with empty array, fetch from backend
+
   const navigate = useNavigate();
 
   const isAdmin = userType === 'administrator';
@@ -107,11 +54,12 @@ const Dashboard = () => {
   }, [navigate]);
 
   // Fetch employees from backend
-  useEffect(() => {
+   
+ /* useEffect(() => {
     const fetchEmployees = async () => {
       try {
         const token = localStorage.getItem('authToken');
-        const response = await fetch('/api/employees', {
+        const response = await fetch('/api/employee', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -133,16 +81,110 @@ const Dashboard = () => {
         console.error('Error fetching employees:', error);
       }
     };
-
     fetchEmployees();
   }, []);
+  
+*/
 
-  const filteredEmployees = employees.filter(employee =>
+/*
+  const fetchEmployees = async () => {
+  try {
+    const token = localStorage.getItem("authToken");
+    const response = await fetch("http://localhost:5000/api/employee", {
+     method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    firstName: newEmployee.firstName,
+    lastName: newEmployee.lastName,
+    email: newEmployee.email,
+    position: newEmployee.position,
+    department: newEmployee.department,
+    status: 'ACTIVE'
+  })
+    });
+
+    if (!response.ok) {
+      const text = await response.text(); // read raw response (HTML or error)
+      throw new Error(`Server error ${response.status}: ${text}`);
+    }
+
+    // Ensure response is JSON
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      const text = await response.text();
+      throw new Error(`Expected JSON, but got: ${text.substring(0, 100)}...`);
+    }
+
+    const data = await response.json();
+    setEmployees(
+      data.map((emp) => ({
+        ...emp,
+        initials: emp.firstName.charAt(0) + emp.lastName.charAt(0),
+        selected: false,
+      }))
+    );
+  } catch (error) {
+    console.error("Error fetching employees:", error.message);
+  }
+};
+
+useEffect(() => {
+  fetchEmployees();
+}, [fetchEmployees]);
+ */
+
+// Fetch employees from backend (GET)
+const fetchEmployees = useCallback(async () => {
+  try {
+    const token = localStorage.getItem("authToken");
+    const response = await fetch("http://localhost:5000/api/employee", {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`Server error ${response.status}: ${text}`);
+    }
+
+    const data = await response.json();
+    setEmployees(
+      data.map((emp) => ({
+        ...emp,
+        initials: emp.firstName.charAt(0) + emp.lastName.charAt(0),
+        selected: false,
+      }))
+    );
+  } catch (error) {
+    console.error("Error fetching employees:", error.message);
+  }
+}, []);
+
+useEffect(() => {
+  fetchEmployees();
+}, [fetchEmployees]);
+
+
+
+  /*const filteredEmployees = employees.filter(employee =>
     employee.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     employee.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     employee.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     employee.department.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  ); */
+
+  const filteredEmployees = employees.filter(employee =>
+  (employee.firstName && employee.firstName.toLowerCase().includes(searchTerm.toLowerCase())) ||
+  (employee.lastName && employee.lastName.toLowerCase().includes(searchTerm.toLowerCase())) ||
+  (employee.email && employee.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
+  (employee.department && employee.department.toLowerCase().includes(searchTerm.toLowerCase()))
+);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -182,7 +224,7 @@ const Dashboard = () => {
 
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch('/api/employees', {
+      const response = await fetch('/api/employee', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -258,7 +300,7 @@ const Dashboard = () => {
 
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`/api/employees/${selectedEmployee.id}`, {
+      const response = await fetch(`http://localhost:5000/api/employee/${selectedEmployee.id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -304,7 +346,7 @@ const Dashboard = () => {
   const handleDeleteEmployee = async () => {
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`/api/employees/${selectedEmployee.id}`, {
+      const response = await fetch(`http://localhost:5000/api/employee${selectedEmployee.id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -373,7 +415,7 @@ const Dashboard = () => {
     try {
       const token = localStorage.getItem('authToken');
       const deletePromises = selectedEmployees.map(emp =>
-        fetch(`/api/employees/${emp.id}`, {
+        fetch(`http://localhost:5000/api/employee/${emp.id}`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${token}`
@@ -557,8 +599,8 @@ const Dashboard = () => {
                           <span className="department-badge">{employee.department}</span>
                         </td>
                         <td>
-                          <span className={`status-badge ${employee.status.toLowerCase().replace('_', '-')}`}>
-                            {employee.status.replace('-', ' ')}
+                          <span className={`status-badge ${employee.status ? employee.status.toLowerCase().replace('_', '-') : ''}`}>
+                                {employee.status ? employee.status.replace('-', ' ') : ''}
                           </span>
                         </td>
                         <td>
@@ -850,7 +892,8 @@ const Dashboard = () => {
             </div>
             
             <div className="modal-body">
-              <p>Are you sure you want to delete <strong>{selectedEmployee.firstName} {selectedEmployee.lastName}</strong>?</p>
+              <p>Are you sure you want to delete <strong>{selectedEmployee.firstName}
+                 {selectedEmployee.lastName}</strong>?</p>
               <p>This action cannot be undone.</p>
             </div>
             

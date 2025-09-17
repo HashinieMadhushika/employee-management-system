@@ -11,12 +11,22 @@ router.get("/", async (req, res) => {
        FROM employees e 
        JOIN users u ON e.user_id = u.id`
     );
-    res.json(rows);
+    //res.json(rows);
+
+    const employees = rows.map(emp => ({
+      ...emp,
+      initials: `${emp.firstName[0] || ''}${emp.lastName[0] || ''}`.toUpperCase(),
+      selected: false
+    }));
+    res.json(employees);
+    
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to fetch employees" });
   }
 });
+
+
 
 // Admin updates employee
 router.put("/:id", async (req, res) => {
