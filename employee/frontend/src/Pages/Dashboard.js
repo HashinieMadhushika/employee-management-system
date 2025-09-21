@@ -136,6 +136,8 @@ useEffect(() => {
 }, [fetchEmployees]);
  */
 
+
+
 // Fetch employees from backend (GET)
 const fetchEmployees = useCallback(async () => {
   try {
@@ -224,7 +226,7 @@ useEffect(() => {
 
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch('/api/employee', {
+      const response = await fetch('http://localhost:5000/api/employee', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -257,6 +259,7 @@ useEffect(() => {
           email: '',
           position: '',
           department: 'Engineering'
+
         });
         setShowAddEmployeeModal(false);
         
@@ -346,7 +349,7 @@ useEffect(() => {
   const handleDeleteEmployee = async () => {
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`http://localhost:5000/api/employee${selectedEmployee.id}`, {
+      const response = await fetch(`http://localhost:5000/api/employee/${selectedEmployee.id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -846,19 +849,17 @@ useEffect(() => {
                 </select>
               </div>
 
-              <div className="form-group">
-                <label htmlFor="update-status">Status</label>
-                <select
+               <select
                   id="update-status"
                   name="status"
-                  value={updateEmployee.status}
+                  value={updateEmployee.status || "ACTIVE"}  // fallback to ACTIVE
                   onChange={handleUpdateInputChange}
                 >
                   <option value="ACTIVE">ACTIVE</option>
                   <option value="ON-LEAVE">ON-LEAVE</option>
                   <option value="TERMINATED">TERMINATED</option>
                 </select>
-              </div>
+
               
               <div className="modal-actions">
                 <button 
