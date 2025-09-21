@@ -3,14 +3,14 @@
 /* Global Styles */
 .home-page {
   font-family: 'Arial', sans-serif;
-  color: #333;
+  color: #b2a1a1;
   line-height: 1.6;
 }
 
 /* Hero Section */
 .hero-section {
   padding: 4rem 2rem;
-  background: #f8f9fa;
+  background: #f1f1f1;
 }
 
 .hero-container {
@@ -18,7 +18,7 @@
   align-items: center;
   max-width: 1200px;
   margin: 0 auto;
-  gap: 3rem;
+  gap: 15rem;
 }
 
 .hero-content {
@@ -28,26 +28,26 @@
 .hero-image {
   flex: 1;
   position: relative;
-  aspect-ratio: 16/9; 
+  aspect-ratio: 100/80; 
   overflow: hidden;
 }
 
 .hero-image img {
   width: 100%;
-  height: 100%;
+  height: 90%;
   object-fit: cover;
   object-position: center;
 }
 
 .hero-section h1 {
-  color: #2c3e50;
+  color: #4f5d6c;
   font-size: 2.5rem;
   margin-bottom: 1.5rem;
 }
 
 .hero-description {
   color: #4a5568;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   line-height: 1.7;
 }
 
@@ -55,41 +55,41 @@
 .button-group {
   display: flex;
   justify-content: center;
-  gap: 1.5rem;
-  margin: 3rem 0;
+  gap: 10rem;
+  margin: 1rem 0;
 }
 
 .cta-button {
-  padding: 0.8rem 2rem;
+  padding: 1rem 4rem;
   border-radius: 4px;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.5rem;
   cursor: pointer;
   transition: all 0.3s ease;
   border: none;
 }
 
 .primary {
-  background-color: #C48CB3; 
-  color: white;
-  border: 2px solid #C48CB3;
+  background-color:  rgba(66, 133, 244, 0.2); 
+  color: rgb(8, 8, 8);
+  border: 2px solid #000000;
 }
 
 .secondary {
-  background-color: #E5C9D7; 
+  background-color:  rgba(66, 133, 244, 0.2); 
   color: #333; 
-  border: 2px solid #E5C9D7;
+  border: 2px solid #000000;
   margin-left: 30px;
 }
 
 .primary:hover {
-  background-color: #AD7AA1; 
-  border-color: #AD7AA1;
+  background-color: #ffffff; 
+  border-color: #000000;
 }
 
 .secondary:hover {
-  background-color: #D8B8CA; 
-  border-color: #D8B8CA;
+  background-color:  #ffffff; 
+  border-color: #000000;
 }
 
 /* About Section */
@@ -100,49 +100,53 @@
 
 .about-header {
   text-align: center;
-  margin-bottom: 3rem;
 }
 
 .about-header h2 {
-  color: #2c3e50;
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
+  color:  #000000;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 0rem;
 }
 
 .about-header h3 {
-  color: #C48CB3;
-  font-size: 1.5rem;
-  font-weight: 400;
+  font-weight: 700;
+  color: #2c3e50;
+  font-size: 1.8rem;
 }
 
 .about-content {
-  max-width: 1200px;
+  text-align: center;
+  max-width: 1500px;
   margin: 0 auto;
 }
 
 .about-intro {
-  display: grid;
+  display: FLEX;
   grid-template-columns: 1fr 1fr;
-  gap: 3rem;
+  text-align: center;
   align-items: center;
-  margin-bottom: 4rem;
 }
 
 .about-intro p {
   color: #4a5568;
-  font-size: 1.1rem;
-  line-height: 1.8;
+  font-size: 1.3rem;
+  text-align: center;
+  display: flex;
+  align-items: center;
 }
 
 .team-photo {
   width: 100%;
-  border-radius: 8px;
+  border-radius: 4REM;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 /* Features Section - Updated for horizontal layout */
 .features-container {
-  margin: 4rem 0;
+  margin: 2rem 0;
 }
 
 .feature-row {
@@ -157,7 +161,7 @@
   min-width: 250px;
   text-align: center;
   padding: 2rem 1.5rem;
-  background: #f9f9f9;
+  background: rgba(66, 133, 244, 0.2);
   border-radius: 8px;
   transition: transform 0.3s ease;
 }
@@ -172,7 +176,7 @@
   background: rgba(196, 140, 179, 0.1);
   width: 80px;
   height: 80px;
-  border-radius: 50%;
+  border-radius: 60%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -188,13 +192,14 @@
 
 .feature-content h4 {
   color: #2c3e50;
-  font-size: 1.3rem;
-  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .feature-content p {
   color: #4a5568;
   line-height: 1.6;
+  font-size: 1.3REM;
 }
 
 /* Mission & Vision Section */
@@ -207,24 +212,25 @@
 }
 
 .mission-card, .vision-card {
-  background: white;
+  background: rgb(208, 222, 237);
   border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 4px 20px rgba(0,0,0,0.08);
   display: flex;
   flex-direction: column;
   text-align: center;
-  border-top: 4px solid #C48CB3;
+  border-top: 4px solid #5953c3;
 }
 
 .mv-content h4 {
   color: #2c3e50;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+  font-size: 2.3rem;
+  margin-bottom: 0.5rem;
 }
 
 .mv-content p {
   color: #4a5568;
+  font-size: 1.3REM;
   line-height: 1.8;
 }
 
@@ -297,30 +303,33 @@
 /* Services Section */
 .services-section {
   padding: 5rem 2rem;
-  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  background: linear-gradient(135deg, #e6e6e7 0%, #ffffff 100%);
 }
 
 .services-header {
   text-align: center;
-  max-width: 800px;
+  max-width: 1500px;
   margin: 0 auto 4rem;
 }
 
 .services-header h2 {
-  color: #C48CB3;
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
+  color: #000000;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 0rem;
 }
 
 .services-header h3 {
   color: #2c3e50;
-  font-size: 1.8rem;
+  font-size: 2.5rem;
   margin-bottom: 1rem;
 }
 
 .services-header p {
   color: #4a5568;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
 }
 
 /* Services Grid */
@@ -328,7 +337,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 2.5rem;
-  max-width: 1200px;
+  max-width: 1500px;
   margin: 0 auto;
 }
 
@@ -351,7 +360,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #C48CB3, #E5C9D7);
+  background: linear-gradient(90deg, #5953c3, #E5C9D7);
   transform: scaleX(0);
   transition: transform 0.3s ease;
 }
@@ -388,22 +397,24 @@
 
 .service-card h4 {
   color: #2c3e50;
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   margin-bottom: 1rem;
 }
 
 .service-card p {
+  font-size: 1.3REM;
   color: #4a5568;
   line-height: 1.6;
   margin-bottom: 1.5rem;
 }
 
 .service-link {
-  color: #C48CB3;
+  color: #5953c3;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 800;
   transition: color 0.3s ease;
   display: inline-block;
+  font-size: 1.2REM;
 }
 
 .service-link:hover {
@@ -414,11 +425,11 @@
 /* Services CTA */
 .services-cta {
   text-align: center;
-  background: linear-gradient(135deg, #004080, #0066cc);
+  background: linear-gradient(135deg, #b9c0c7, #3f92e5);
   color: white;
-  padding: 4rem 2rem;
+  padding: 2rem 2rem;
   border-radius: 20px;
-  margin-top: 5rem;
+  margin-top: 3rem;
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
@@ -431,14 +442,14 @@
 
 .services-cta p {
   font-size: 1.1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   opacity: 0.9;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .services-section {
-    padding: 3rem 1rem;
+    padding: 2rem 1rem;
   }
   
   .services-grid {
@@ -456,8 +467,8 @@
   }
   
   .icon-circle {
-    width: 60px;
-    height: 60px;
+    width: 100px;
+    height: 100px;
     font-size: 1.5rem;
   }
 }
@@ -475,37 +486,37 @@
 }
 
 .why-choose-header h2 {
-  color: #C48CB3;
+  color: #000000;
   font-size: 2.5rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0rem;
 }
 
 .why-choose-header h3 {
   color: #2c3e50;
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
+  font-size: 2rem;
+  margin-bottom: 0rem;
 }
 
 .why-choose-header p {
   color: #4a5568;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
 }
 
 .why-choose-content {
-  max-width: 1200px;
+  max-width: 1300px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 4rem;
+  gap: 10rem;
 }
 
 /* Advantages Section */
 .advantages-section h4 {
   color: #2c3e50;
-  font-size: 1.5rem;
-  margin-bottom: 2rem;
+  font-size: 2rem;
+  margin-bottom: 0.1rem;
   position: relative;
-  padding-left: 1.5rem;
+  padding-left: 1rem;
 }
 
 .advantages-section h4::before {
@@ -515,7 +526,7 @@
   top: 50%;
   width: 8px;
   height: 8px;
-  background: #C48CB3;
+  background: #5953c3;
   border-radius: 50%;
   transform: translateY(-50%);
 }
@@ -540,7 +551,7 @@
 
 .advantage-item:hover {
   transform: translateX(8px);
-  border-left-color: #C48CB3;
+  border-left-color: #5953c3;
   box-shadow: 0 8px 24px rgba(0,0,0,0.1);
 }
 
@@ -558,14 +569,14 @@
 
 .advantage-text h5 {
   color: #2c3e50;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   margin-bottom: 0.5rem;
   font-weight: 600;
 }
 
 .advantage-text p {
   color: #4a5568;
-  font-size: 0.95rem;
+  font-size: 1rem;
   line-height: 1.5;
   margin: 0;
 }

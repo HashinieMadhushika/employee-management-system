@@ -4,6 +4,8 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import './Dashboard.css';
 
+
+
 const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeSection, setActiveSection] = useState('employees');
@@ -53,90 +55,6 @@ const Dashboard = () => {
     }
   }, [navigate]);
 
-  // Fetch employees from backend
-   
- /* useEffect(() => {
-    const fetchEmployees = async () => {
-      try {
-        const token = localStorage.getItem('authToken');
-        const response = await fetch('/api/employee', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          setEmployees(data.map(emp => ({
-            ...emp,
-            initials: emp.firstName.charAt(0) + emp.lastName.charAt(0),
-            selected: false
-          })));
-        } else {
-          console.error('Failed to fetch employees');
-          // Keep the dummy data as fallback for demo
-        }
-      } catch (error) {
-        console.error('Error fetching employees:', error);
-      }
-    };
-    fetchEmployees();
-  }, []);
-  
-*/
-
-/*
-  const fetchEmployees = async () => {
-  try {
-    const token = localStorage.getItem("authToken");
-    const response = await fetch("http://localhost:5000/api/employee", {
-     method: 'POST',
-  headers: {
-    'Authorization': `Bearer ${token}`,
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    firstName: newEmployee.firstName,
-    lastName: newEmployee.lastName,
-    email: newEmployee.email,
-    position: newEmployee.position,
-    department: newEmployee.department,
-    status: 'ACTIVE'
-  })
-    });
-
-    if (!response.ok) {
-      const text = await response.text(); // read raw response (HTML or error)
-      throw new Error(`Server error ${response.status}: ${text}`);
-    }
-
-    // Ensure response is JSON
-    const contentType = response.headers.get("content-type");
-    if (!contentType || !contentType.includes("application/json")) {
-      const text = await response.text();
-      throw new Error(`Expected JSON, but got: ${text.substring(0, 100)}...`);
-    }
-
-    const data = await response.json();
-    setEmployees(
-      data.map((emp) => ({
-        ...emp,
-        initials: emp.firstName.charAt(0) + emp.lastName.charAt(0),
-        selected: false,
-      }))
-    );
-  } catch (error) {
-    console.error("Error fetching employees:", error.message);
-  }
-};
-
-useEffect(() => {
-  fetchEmployees();
-}, [fetchEmployees]);
- */
-
-
 
 // Fetch employees from backend (GET)
 const fetchEmployees = useCallback(async () => {
@@ -172,14 +90,6 @@ useEffect(() => {
   fetchEmployees();
 }, [fetchEmployees]);
 
-
-
-  /*const filteredEmployees = employees.filter(employee =>
-    employee.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    employee.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    employee.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    employee.department.toLowerCase().includes(searchTerm.toLowerCase())
-  ); */
 
   const filteredEmployees = employees.filter(employee =>
   (employee.firstName && employee.firstName.toLowerCase().includes(searchTerm.toLowerCase())) ||
@@ -481,6 +391,8 @@ useEffect(() => {
           >
             Reports
           </button>
+
+          
           {isAdmin && (
             <button 
               className={`tab-btn ${activeSection === 'settings' ? 'active' : ''}`}

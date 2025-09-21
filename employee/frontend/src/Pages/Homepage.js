@@ -39,22 +39,14 @@ const HomePage = () => {
 
       
       {/* Second Part - Updated About Section */}
-      <main className="main-content">
+      <main className="main-content" id="about">
         <section className="about-section">
           <div className="about-header">
-            <h2>About Us</h2>
+            <h2>ABOUT US</h2>
             <h3>A Better Way To Build Software</h3>
           </div>
           
           <div className="about-content">
-            <div className="about-intro">
-              <p>
-                TechCorp has been delivering innovative software solutions for over 10 years. 
-                We combine technical expertise with industry knowledge to create products 
-                that drive business growth.
-              </p>
-            </div>
-            
             {/* Features Section - Updated Layout */}
             <div className="features-container">
               <div className="feature-row">
@@ -132,7 +124,7 @@ const HomePage = () => {
       {/* Services Section */}
 <section className="services-section" id="services">
   <div className="services-header">
-    <h2>Services</h2>
+    <h2>SERVICES</h2>
     <h3>Comprehensive Software Solutions</h3>
     <p>We offer a wide range of services to help you transform your business with technology.</p>
   </div>
@@ -208,9 +200,9 @@ const HomePage = () => {
 </section>
 
 {/* Why Choose Us Section */}
-<section className="why-choose-us" id="why-us">
+<section className="why-choose-us" id="contact">
   <div className="why-choose-header">
-    <h2>Why Choose Us</h2>
+    <h2>WHY CHOOSE US</h2>
     <h3>The TechCorp Advantage</h3>
     <p>We bring together expertise, innovation, and dedication to deliver exceptional software solutions.</p>
   </div>
@@ -260,13 +252,7 @@ const HomePage = () => {
           </div>
         </div>
 
-        <div className="advantage-item">
-          <div className="advantage-icon">✅</div>
-          <div className="advantage-text">
-            <h5>Commitment to quality and customer satisfaction</h5>
-            <p>Dedicated to exceeding your expectations</p>
-          </div>
-        </div>
+        
       </div>
     </div>
 

@@ -27,14 +27,16 @@ const Footer = () => {
         </div>
 
         {/* Services List */}
-       <div className="links-column">
+       {/* Services List */}
+          <div className="footer-services links-column">
             <h3>Services</h3>
-                <a href="/services/custom-software">Custom Software</a>
-                <a href="/services/mobile-apps">Mobile Apps</a>
-                <a href="/services/cloud-solutions">Cloud Solutions</a>
-                <a href="/services/data-analytics">Data Analytics</a>
-                <a href="/services/cybersecurity">Cybersecurity</a>
-</div>
+            <a href="/services/custom-software">Custom Software</a>
+            <a href="/services/mobile-apps">Mobile Apps</a>
+            <a href="/services/cloud-solutions">Cloud Solutions</a>
+            <a href="/services/data-analytics">Data Analytics</a>
+            <a href="/services/cybersecurity">Cybersecurity</a>
+          </div>
+
 
         {/* Contact Information */}
         <div className="footer-contact">
