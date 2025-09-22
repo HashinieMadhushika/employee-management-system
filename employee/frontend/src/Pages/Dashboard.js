@@ -197,59 +197,74 @@ useEffect(() => {
     setShowUpdateEmployeeModal(true);
   };
 
-  const handleUpdateEmployee = async (e) => {
-    e.preventDefault();
-    
-    if (!updateEmployee.firstName || !updateEmployee.lastName || !updateEmployee.email || !updateEmployee.position || !updateEmployee.department) {
-      alert('Please fill in all required fields');
-      return;
-    }
+ const handleUpdateEmployee = async (e) => {
+  e.preventDefault();
 
-    // Email validation
-    if (!isValidEmail(updateEmployee.email)) {
-      alert('Please enter a valid email address');
-      return;
-    }
+  // Required fields check
+  if (
+    !updateEmployee.firstName ||
+    !updateEmployee.lastName ||
+    !updateEmployee.email ||
+    !updateEmployee.position ||
+    !updateEmployee.department
+  ) {
+    alert('Please fill in all required fields');
+    return;
+  }
 
-    try {
-      const token = localStorage.getItem('authToken');
-      const response = await fetch(`http://localhost:5000/api/employee/${selectedEmployee.id}`, {
+  // Email validation
+  if (!isValidEmail(updateEmployee.email)) {
+    alert('Please enter a valid email address');
+    return;
+  }
+
+  try {
+    const token = localStorage.getItem('authToken');
+    const response = await fetch(
+      `http://localhost:5000/api/employee/${selectedEmployee.id}`,
+      {
         method: 'PUT',
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(updateEmployee)
-      });
-
-      if (response.ok) {
-        const updatedEmp = await response.json();
-        
-        // Update employee in the array
-        const updatedEmployees = employees.map(emp =>
-          emp.id === selectedEmployee.id
-            ? {
-                ...updatedEmp,
-                initials: updatedEmp.firstName.charAt(0) + updatedEmp.lastName.charAt(0),
-                selected: emp.selected
-              }
-            : emp
-        );
-
-        setEmployees(updatedEmployees);
-        setShowUpdateEmployeeModal(false);
-        setSelectedEmployee(null);
-        
-        // Show success message
-        alert('Employee updated successfully!');
-      } else {
-        alert('Failed to update employee');
+        body: JSON.stringify(updateEmployee),
       }
-    } catch (error) {
-      console.error('Error updating employee:', error);
-      alert('Error updating employee');
+    );
+
+    if (response.ok) {
+      const updatedEmp = await response.json();
+
+      // Safely build initials
+      const initials =
+        (updatedEmp.firstName ? updatedEmp.firstName.charAt(0) : '') +
+        (updatedEmp.lastName ? updatedEmp.lastName.charAt(0) : '');
+
+      // Update employee in the state array
+      const updatedEmployees = employees.map((emp) =>
+        emp.id === selectedEmployee.id
+          ? {
+              ...emp,              
+              ...updatedEmp,       
+              initials,
+            }
+          : emp
+      );
+
+      setEmployees(updatedEmployees);
+      setShowUpdateEmployeeModal(false);
+      setSelectedEmployee(null);
+
+      alert('Employee updated successfully!');
+    } else {
+      alert('Failed to update employee');
     }
-  };
+  } catch (error) {
+    console.error('Error updating employee:', error);
+    alert('Error updating employee');
+  }
+};
+
 
   const handleDeleteClick = (employee) => {
     setSelectedEmployee(employee);
@@ -389,7 +404,7 @@ useEffect(() => {
             className={`tab-btn ${activeSection === 'reports' ? 'active' : ''}`}
             onClick={() => setActiveSection('reports')}
           >
-            Reports
+            {/*Reports */}
           </button>
 
           
@@ -398,7 +413,7 @@ useEffect(() => {
               className={`tab-btn ${activeSection === 'settings' ? 'active' : ''}`}
               onClick={() => setActiveSection('settings')}
             >
-              Settings
+             {/*} Settings */}
             </button>
           )}
         </div>
